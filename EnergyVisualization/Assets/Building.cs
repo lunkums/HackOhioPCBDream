@@ -13,17 +13,19 @@ public class Building : MonoBehaviour
         material = GetComponent<MeshRenderer>().material;
     }
 
-    void Start()
+    private void Start()
     {
-        AdjustBuilding(DataPopulator.Instance.GetData(_name));
+        Adjust();
     }
 
-    private void AdjustBuilding(float data)
+    public void Adjust()
     {
-        // Get color before scaling down data
-        material.color = DataPopulator.Instance.GetColorFromData(data);
-        data /= 1000;
-        building.localScale = new Vector3(building.localScale.x, data, building.localScale.z);
-        building.position = new Vector3(building.position.x, data / 2, building.position.z);
+        DataManager dm = DataManager.Instance;
+        float data = dm.GetData(_name);
+        float height = BuildingManager.Instance.MaxBuildingHeight * dm.GetRatio(data);
+
+        material.color = dm.GetColorFromData(data);
+        building.localScale = new Vector3(building.localScale.x, height, building.localScale.z);
+        building.position = new Vector3(building.position.x, height / 2, building.position.z);
     }
 }
