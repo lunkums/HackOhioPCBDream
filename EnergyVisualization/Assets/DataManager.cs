@@ -16,10 +16,10 @@ public class DataManager : MonoBehaviour
     private DateTime[] dateTimes;
     private float[] dataColumns;
     private string[] columnNames;
-    private DataType dataType;
-    private int dateTimeIndex;
-
     private float currentMax;
+
+    private int dateTimeIndex;
+    private DataType dataType;
 
     public int NumOfDateTimes => dateTimes.Length - 1;
     public int DateTimeIndex
@@ -27,24 +27,21 @@ public class DataManager : MonoBehaviour
         set
         {
             dateTimeIndex = value;
-            string[] columns = data[Now].Split(',');
-            // Reset the current max
-            currentMax = 0;
-
-            // Ignore first column "Date Time"
-            for (int i = 1; i < columns.Length; i++)
-            {
-                float curr = float.TryParse(columns[i], out float result) ? result : 0;
-                dataColumns[i] = curr;
-                if (columnNames[i].Contains(DataTypeAsString))
-                    currentMax = Math.Max(curr, currentMax);
-            }
+            ReloadColumn();
+        }
+    }
+    public DataType CurrentDataType
+    {
+        set
+        {
+            dataType = value;
+            ReloadColumn();
         }
     }
 
     private DateTime Now => dateTimes[dateTimeIndex];
 
-    private enum DataType
+    public enum DataType
     {
         ChilledWater,
         Electricity,
@@ -114,7 +111,7 @@ public class DataManager : MonoBehaviour
             data.Add(currentTime, line);
         }
 
-        dataType = DataType.Total;
+        CurrentDataType = DataType.Total;
         DateTimeIndex = 1;
     }
 
@@ -141,5 +138,21 @@ public class DataManager : MonoBehaviour
     public float GetRatio(float data)
     {
         return data / currentMax;
+    }
+
+    private void ReloadColumn()
+    {
+        string[] columns = data[Now].Split(',');
+        // Reset the current max to 1 to avoid divide by 0 errors
+        currentMax = 1;
+
+        // Ignore first column "Date Time"
+        for (int i = 1; i < columns.Length; i++)
+        {
+            float curr = float.TryParse(columns[i], out float result) ? result : 0;
+            dataColumns[i] = curr;
+            if (columnNames[i].Contains(DataTypeAsString))
+                currentMax = Math.Max(curr, currentMax);
+        }
     }
 }
