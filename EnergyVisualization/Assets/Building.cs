@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Building : MonoBehaviour
@@ -7,6 +8,8 @@ public class Building : MonoBehaviour
     private Transform building;
     private Material material;
     private MeshRenderer meshRenderer;
+
+    public string Name => _name;
 
     private void Awake()
     {
@@ -34,5 +37,15 @@ public class Building : MonoBehaviour
 
         // Hide buildings with data 0 or they will produce visual artifacts
         meshRenderer.enabled = !Mathf.Approximately(0, data);
+    }
+
+    public void Select()
+    {
+
+    }
+
+    public void Deselect()
+    {
+
     }
 }
