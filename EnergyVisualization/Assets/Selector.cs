@@ -3,11 +3,22 @@ using UnityEngine;
 public class Selector : MonoBehaviour
 {
     private Camera cam;
-    private Building selection;
+    private IBuilding selection;
+
+    private IBuilding Selection
+    {
+        set
+        {
+            selection.Deselect();
+            selection = value;
+            selection.Select();
+        }
+    }
 
     private void Awake()
     {
         cam = GetComponent<Camera>();
+        selection = NullBuilding.Instance;
     }
 
     private void Update()
@@ -21,18 +32,12 @@ public class Selector : MonoBehaviour
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (!Physics.Raycast(ray, out hit) || !hit.transform.TryGetComponent(out Building building))
+        if (!Physics.Raycast(ray, out hit) || !hit.transform.TryGetComponent(out IBuilding building))
             return;
 
         if (building == selection)
-        {
-            building.Deselect();
-            selection = null;
-        }
+            Selection = NullBuilding.Instance;
         else
-        {
-            building.Select();
-            selection = building;
-        }
+            Selection = building;
     }
 }

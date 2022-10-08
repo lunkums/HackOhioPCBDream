@@ -1,4 +1,3 @@
-using cakeslice;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +25,6 @@ public class BuildingManager : MonoBehaviour
         foreach (Building building in gameObject.GetComponentsInChildren<Building>())
         {
             buildings.Add(building);
-            building.gameObject.AddComponent<Outline>();
         }
     }
 

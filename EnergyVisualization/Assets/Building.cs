@@ -1,13 +1,13 @@
-using System;
 using UnityEngine;
 
-public class Building : MonoBehaviour
+public class Building : MonoBehaviour, IBuilding
 {
     [SerializeField] private string _name;
 
     private Transform building;
     private Material material;
     private MeshRenderer meshRenderer;
+    private Outline outline;
 
     public string Name => _name;
 
@@ -15,6 +15,7 @@ public class Building : MonoBehaviour
     {
         building = transform;
         meshRenderer = GetComponent<MeshRenderer>();
+        outline = GetComponent<Outline>();
         material = meshRenderer.material;
     }
 
@@ -41,11 +42,11 @@ public class Building : MonoBehaviour
 
     public void Select()
     {
-
+        outline.enabled = true;
     }
 
     public void Deselect()
     {
-
+        outline.enabled = false;
     }
 }
