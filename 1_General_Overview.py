@@ -1,13 +1,18 @@
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(
     page_title="Hello",
     page_icon="👋",
 )
 
-st.write("# Welcome to Streamlit! 👋")
+st.write("# Welcome to OSU Energy Dashboard! 👋")
 
-st.sidebar.success("Select a demo above.")
+st.sidebar.success("Select a dashboard above.")
+
+# df = pd.read_csv('data/Dorm Buildings.csv')
+# show(df.describe)
+#df.groupby(['Series Name'])
 
 st.markdown(
     """
