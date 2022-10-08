@@ -21,6 +21,7 @@ public class DataManager : MonoBehaviour
     private DataType dataType;
 
     public int NumOfDateTimes => dateTimes.Length - 1;
+    public DateTime Now => dateTimes[dateTimeIndex];
     public int DateTimeIndex
     {
         set
@@ -37,8 +38,6 @@ public class DataManager : MonoBehaviour
             ReloadColumn();
         }
     }
-
-    private DateTime Now => dateTimes[dateTimeIndex];
 
     public enum DataType
     {

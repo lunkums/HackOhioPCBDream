@@ -917,6 +917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8023ea92ba2aba6479b2f4c1bf04e25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sliderHeader: {fileID: 954598950}
 --- !u!114 &688592466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1295,8 +1296,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16.32
-  m_fontSizeBase: 16.32
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1560,7 +1561,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxBuildingHeight: 8
-  positionOffset: {x: 0, y: -0.0001, z: 0}
 --- !u!1 &1006175917
 GameObject:
   m_ObjectHideFlags: 0
