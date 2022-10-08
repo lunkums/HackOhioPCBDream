@@ -10,8 +10,7 @@ public class DataManager : MonoBehaviour
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private Gradient gradient;
 
-    private Dictionary<DateTime, string> data
-        = new Dictionary<DateTime, string>();
+    private Dictionary<DateTime, string> data = new Dictionary<DateTime, string>();
 
     private DateTime[] dateTimes;
     private float[] dataColumns;
