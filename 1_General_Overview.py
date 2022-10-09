@@ -117,10 +117,23 @@ def combined_average_total_building():
     st.subheader('Average Total Energy Consumption by Building in kBTU')
     st.plotly_chart(fig)
 
+def predictive_model():
+    st.subheader('Total Energy Consumption Predictive Model')
+    steam = st.number_input('Insert Steam kBTU')
+    elec = st.number_input('Insert Electricity kBTU')
+    chill = st.number_input('Insert Chilled Water kBTU')
+    hot = st.number_input('Insert Hot Water kBTU')
+    price = st.number_input('Insert Price of Electricity (Amount per kBTU)')
+
+    total = -12.189 + (0.404*steam) + (1.411*elec) + (0.879 * chill) + (0.735 * hot) + (37.346*price)
+    st.metric(label="Predicted Total Energy Consumption per Year (kbTU)", value=round(total, 2))
+    
+
+
 
 combined_change_year()
 combined_average_total_building()
-
+predictive_model()
 
 # st.markdown(
 #     """
