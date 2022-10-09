@@ -9,7 +9,10 @@ public class Building : MonoBehaviour, IBuilding
     private MeshRenderer meshRenderer;
     private Outline outline;
 
+    private Vector3 nameTagOffset;
+
     public string Name => _name;
+    public Vector3 Position => building.position + nameTagOffset;
 
     private void Awake()
     {
@@ -35,6 +38,7 @@ public class Building : MonoBehaviour, IBuilding
         material.color = dm.GetColorFromData(data);
         building.localScale = new Vector3(building.localScale.x, height, building.localScale.z);
         building.position = new Vector3(building.position.x, height / 2, building.position.z);
+        nameTagOffset = Vector3.right * building.localScale.x;
 
         // Hide buildings with data 0 or they will produce visual artifacts
         meshRenderer.enabled = !Mathf.Approximately(0, data);

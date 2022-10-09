@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 public class Selector : MonoBehaviour
 {
     private Camera cam;
     private IBuilding selection;
+
+    public static event Action<IBuilding> OnSelect;
 
     private IBuilding Selection
     {
@@ -12,6 +15,7 @@ public class Selector : MonoBehaviour
             selection.Deselect();
             selection = value;
             selection.Select();
+            OnSelect.Invoke(selection);
         }
     }
 
@@ -19,6 +23,9 @@ public class Selector : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         selection = NullBuilding.Instance;
+
+        // Register an empty event to avoid a NPE
+        OnSelect += (building) => { };
     }
 
     private void Update()
@@ -33,7 +40,10 @@ public class Selector : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out hit) || !hit.transform.TryGetComponent(out IBuilding building))
+        {
+            Selection = NullBuilding.Instance;
             return;
+        }
 
         if (building == selection)
             Selection = NullBuilding.Instance;

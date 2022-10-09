@@ -1,4 +1,6 @@
-﻿public sealed class NullBuilding : IBuilding
+﻿using UnityEngine;
+
+public sealed class NullBuilding : IBuilding
 {
     private static readonly NullBuilding instance = new NullBuilding();
 
@@ -15,6 +17,10 @@
             return instance;
         }
     }
+
+    public string Name => "";
+
+    public Vector3 Position => Vector3.zero;
 
     public void Deselect() { }
     public void Select() { }
