@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
+    [SerializeField] private Transform rotator;
     [SerializeField] private Transform rotationPoint;
     [SerializeField] private float sensitivity;
 
@@ -13,22 +15,11 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         rotation = 0;
+        isRotating = false;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            isRotating = true;
-            mouseReference = Input.mousePosition;
-            rotation = 0;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            isRotating = false;
-        }
-
         if (isRotating)
         {
             // offset
@@ -38,10 +29,22 @@ public class CameraController : MonoBehaviour
             rotation = -(mouseOffset.x + mouseOffset.y) * sensitivity;
 
             // rotate
-            transform.RotateAround(rotationPoint.position, Vector3.up, rotation);
+            rotator.RotateAround(rotationPoint.position, Vector3.up, rotation);
 
             // store mouse
             mouseReference = Input.mousePosition;
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        mouseReference = Input.mousePosition;
+        isRotating = true;
+        rotation = 0;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isRotating = false;
     }
 }
