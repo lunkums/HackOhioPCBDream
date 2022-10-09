@@ -35,18 +35,25 @@ df = pd.read_csv('data/Annual Means per Person.csv', index_col='StatType')
 # plot = cDF.plot.pie(y='Percents', figsize=(3,3), radius = 0.9)
 # st.pyplot(plot.figure)
 
-annual_data = pd.read_csv(
+annual_Nondorm_data = pd.read_csv(
     'data/Non-Dorm Annual Basic Stats.csv', index_col='Stat Type')
 
+annual_Dorm_data = pd.read_csv(
+    'data/Dorm Annual Basic Stats.csv', index_col='Stat Type')
+
 #TODO need to include non-dorm and dorm data together!
+#print(combined_data)
 
 
-def overall_change_year():
-    data = annual_data.filter(regex='Total Energy')
-    data = data.drop(data.index[0])
+
+def combined_change_year():
+    data = pd.concat([annual_Nondorm_data, annual_Dorm_data], axis=0, ignore_index=False)
+    data = data.filter(regex='^Mean\s\D\d*\D\d*$', axis=0) 
+    data = data.filter(regex='Total Energy')
     for col in data.columns:
-        data.rename(columns={col: col.replace(
-            " - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
+         data.rename(columns={col: col.replace(" - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
+
+    #st.dataframe(data)
 
     building_names = data.columns
 
@@ -64,8 +71,22 @@ def overall_change_year():
     st.subheader('Total Energy Consumption by Building for Each Year in kBTU')
     st.bar_chart(data=data[select_buildings])
 
+def combined_average_total_building():
+    data = pd.concat([annual_Nondorm_data, annual_Dorm_data], axis=0, ignore_index=False)
+    data = data.filter(regex='^Mean\s\D\d*\D\d*$', axis=0) 
+    data = data.filter(regex='Total Energy')
+    
+    for col in data.columns:
+         data.rename(columns={col: col.replace(" - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
+    
+    st.dataframe(data)
 
-overall_change_year()
+    fig = px.pie(values=data.iloc[0], names=data.columns)
+    st.subheader('Average Total Energy Consumption by Building in kBTU')
+    st.plotly_chart(fig)
+
+combined_change_year()
+combined_average_total_building()
 
 
 # st.markdown(
