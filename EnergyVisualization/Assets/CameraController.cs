@@ -6,6 +6,8 @@ public class CameraController : MonoBehaviour, IPointerUpHandler, IPointerDownHa
     [SerializeField] private Transform rotator;
     [SerializeField] private Transform rotationPoint;
     [SerializeField] private float sensitivity;
+    [SerializeField] private Vector2 minMaxFov;
+    [SerializeField] private float zoomSensitivity;
 
     private Vector3 mouseReference;
     private Vector3 mouseOffset;
@@ -14,12 +16,18 @@ public class CameraController : MonoBehaviour, IPointerUpHandler, IPointerDownHa
 
     private void Start()
     {
+        rotator.LookAt(rotationPoint);
         rotation = 0;
         isRotating = false;
     }
 
     private void Update()
     {
+        float fov = Camera.main.fieldOfView;
+        fov += Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
+        fov = Mathf.Clamp(fov, minMaxFov.x, minMaxFov.y);
+        Camera.main.fieldOfView = fov;
+
         if (isRotating)
         {
             // offset

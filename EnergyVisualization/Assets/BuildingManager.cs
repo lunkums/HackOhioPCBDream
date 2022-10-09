@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
@@ -6,8 +5,9 @@ public class BuildingManager : MonoBehaviour
     public static BuildingManager Instance { get; private set; }
 
     [SerializeField] private float maxBuildingHeight;
+    [SerializeField] private Transform midpoint;
 
-    private List<Building> buildings = new List<Building>();
+    private Building[] buildings;
 
     public float MaxBuildingHeight => maxBuildingHeight;
 
@@ -22,10 +22,18 @@ public class BuildingManager : MonoBehaviour
             Instance = this;
         }
 
-        foreach (Building building in gameObject.GetComponentsInChildren<Building>())
+        buildings = gameObject.GetComponentsInChildren<Building>();
+
+        float x = 0;
+        float z = 0;
+
+        for (int i = 0; i < buildings.Length; i++)
         {
-            buildings.Add(building);
+            x += buildings[i].Position.x;
+            z += buildings[i].Position.z;
         }
+
+        midpoint.position = new Vector3(x / buildings.Length, midpoint.position.y, z / buildings.Length);
     }
 
     public void ReadjustBuildings()
