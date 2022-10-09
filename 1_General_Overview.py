@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import streamlit.components.v1 as components
 
 # st.set_page_config(
 #     page_title="Hello",
@@ -42,6 +43,11 @@ annual_Dorm_data = pd.read_csv(
 
 #TODO need to include non-dorm and dorm data together!
 #print(combined_data)
+
+#HtmlFile = open("EnergyVisualizationBuild\index.html", 'r', encoding='utf-8')
+#source_code = HtmlFile.read() 
+#print(source_code)
+components.iframe("https://lunkums.github.io/EnergyVisualizationTool/", height=750, width=1250)
 
 
 def combine_all_buildings():
