@@ -44,17 +44,25 @@ annual_Dorm_data = pd.read_csv(
 #TODO need to include non-dorm and dorm data together!
 #print(combined_data)
 
+def combine_all_buildings():
+    left = annual_Dorm_data.filter(regex='Total Energy', axis=1)
+    left = left.drop(['Mean (2017-2022)'])
+    #st.dataframe(left)
+    right = annual_Nondorm_data.filter(regex='Total Energy', axis=1)
+    right = right.drop(['Mean (2017-2022)'])
+    #st.dataframe(right)
 
-
-def combined_change_year():
-    data = pd.concat([annual_Nondorm_data, annual_Dorm_data], axis=0, ignore_index=False)
-    data = data.filter(regex='^Mean\s\D\d*\D\d*$', axis=0) 
-    data = data.filter(regex='Total Energy')
+    data = left.merge(right, left_index=True, right_index=True, how='inner')
+    #st.dataframe(data)
+ 
     for col in data.columns:
          data.rename(columns={col: col.replace(" - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
 
-    #st.dataframe(data)
+    return data
 
+def combined_change_year():
+    data = combine_all_buildings()
+    st.dataframe(data)
     building_names = data.columns
 
     all_options = st.checkbox("Select all buildings", value=True)
@@ -76,10 +84,7 @@ def combined_average_total_building():
     data = data.filter(regex='^Mean\s\D\d*\D\d*$', axis=0) 
     data = data.filter(regex='Total Energy')
     
-    for col in data.columns:
-         data.rename(columns={col: col.replace(" - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
-    
-    st.dataframe(data)
+    data =  combine_all_buildings()
 
     fig = px.pie(values=data.iloc[0], names=data.columns)
     st.subheader('Average Total Energy Consumption by Building in kBTU')
