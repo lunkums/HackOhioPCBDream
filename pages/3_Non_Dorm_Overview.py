@@ -24,13 +24,24 @@ def average_total_building():
     for col in data.columns:
         data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
     fig = px.pie(values=data.iloc[0], names=data.columns)
-    st.subheader('Average Total Energy Consumption by Building in kBTU')
+    st.subheader('Percentages of Average Total Energy Consumption by Building in kBTU')
     st.plotly_chart(fig)
 
 def average_total_type():
-    data = annual_data.filter(regex='Total Energy')
-    
+    data = annual_data.filter(regex='Mean ', axis=0)
+    data['Steam Consumption (kbTU)'] = data.filter(like='Steam').sum(1)
+    data['Chilled Water Consumption (kbTU)'] = data.filter(like='Chilled').sum(1)
+    data['Electricity Consumption (kbTU)'] = data.filter(like='Electricity').sum(1)
+    data['Hot Water Consumption (kbTU)'] = data.filter(like='Hot').sum(1)
+    data['Natural Gas Consumption (kbTU)'] = data.filter(like='Natural').sum(1)
+    data = data[data.columns.drop(list(data.filter(regex=' - ')))]
+    st.subheader('Percentages of Average Total Energy Consumption by Type')
+    fig = px.pie(values=data.iloc[0], names=data.columns)
+    st.plotly_chart(fig)
+
+
 
 overall_change_year()
 average_total_building()
+average_total_type()
 
