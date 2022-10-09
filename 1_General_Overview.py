@@ -12,7 +12,7 @@ st.write("# Welcome to OSU Campus Energy Dashboard! 💃")
 
 st.sidebar.success("Select a dashboard above.")
 
-df = pd.read_csv('data/Annual Means per Person.csv', index_col='StatType')
+df = pd.read_csv('data/Non-Dorm Annual Means per Person.csv', index_col='StatType')
 
 # mean_rows = df.filter(regex="^Mean", axis=0)  # select rows
 # mean_gas = mean_rows.filter(regex='Natural Gas Consumption', axis=1)  # select columns

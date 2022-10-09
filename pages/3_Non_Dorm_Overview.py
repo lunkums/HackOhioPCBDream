@@ -8,10 +8,14 @@ st.set_page_config(
     page_icon="👋",
 )
 
-annual_data = pd.read_csv('data/Non-Dorm Annual Basic Stats.csv', index_col='Stat Type')
+annual_basic = pd.read_csv('data/Non-Dorm Annual Basic Stats.csv', index_col='Stat Type')
+annual_person = pd.read_csv('data/Non-Dorm Annual Means per Person.csv', index_col='StatType')
+monthly_basic = pd.read_csv('data/Non-Dorm_Monthly_YTD.csv', index_col='Stat Type')
+monthly_person = pd.read_csv('data/Non-Dorm_Monthly_YTD per Person.csv', index_col='Stat Type')
+
 
 def overall_change_year():
-    data = annual_data.filter(regex='Total Energy')
+    data = annual_basic.filter(regex='Total Energy')
     data = data.drop(data.index[0])
     for col in data.columns:
         data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
@@ -19,21 +23,21 @@ def overall_change_year():
     st.line_chart(data=data)
 
 def overall_change_year_type():
-    data = annual_data.filter(regex='Total Energy')
+    data = annual_basic.filter(regex='Total Energy')
     data = data.drop(data.index[0])
     for col in data.columns:
         data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
     st.bar_chart(data=data)
 
 def total_average_energy():
-    data = annual_data.filter(regex='Total Energy')
+    data = annual_basic.filter(regex='Total Energy')
     data = data.filter(regex='Mean', axis=0)
     data['Energy Consumption (kbTU)'] = data.filter(like='Total').sum(1)
     data = data[data.columns.drop(list(data.filter(regex='Total Energy')))]
     st.metric(label="Average Total Energy Consumption per Year (kbTU)", value=round(data['Energy Consumption (kbTU)'], 2))
 
 def overall_change_year():
-    data = annual_data.filter(regex='Total Energy')
+    data = annual_basic.filter(regex='Total Energy')
     data = data.drop(data.index[0])
     for col in data.columns:
         data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
@@ -41,7 +45,7 @@ def overall_change_year():
     st.line_chart(data=data)
 
 def average_total_building():
-    data = annual_data.filter(regex='Total Energy')
+    data = annual_basic.filter(regex='Total Energy')
     data = data.filter(regex='Mean ', axis=0)
     for col in data.columns:
         data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
@@ -50,7 +54,7 @@ def average_total_building():
     st.plotly_chart(fig)
 
 def average_total_type():
-    data = annual_data.filter(regex='Mean ', axis=0)
+    data = annual_basic.filter(regex='Mean ', axis=0)
     data['Steam Consumption (kbTU)'] = data.filter(like='Steam').sum(1)
     data['Chilled Water Consumption (kbTU)'] = data.filter(like='Chilled').sum(1)
     data['Electricity Consumption (kbTU)'] = data.filter(like='Electricity').sum(1)
@@ -61,7 +65,50 @@ def average_total_type():
     fig = px.pie(values=data.iloc[0], names=data.columns)
     st.plotly_chart(fig)
 
+def overall_change_year_person():
+    data = annual_person.filter(regex='Total Energy') 
+    data = data.drop(data.index[0])
+    for col in data.columns:
+        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
+    st.subheader('Total Energy Consumption per Person by Building for Each Year in kBTU')
+    st.line_chart(data=data)
 
+def overall_change_year_type_person():
+    data = annual_person.filter(regex='Total Energy')
+    data = data.drop(data.index[0])
+    for col in data.columns:
+        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
+    st.bar_chart(data=data)
+
+def total_average_energy_person():
+    data = annual_person.filter(regex='Total Energy')
+    data = data.filter(regex='Mean', axis=0)
+    data['Energy Consumption (kbTU)'] = data.filter(like='Total').sum(1)
+    data = data[data.columns.drop(list(data.filter(regex='Total Energy')))]
+    st.metric(label="Average Total Energy Consumption per Person per Year (kbTU)", value=round(data['Energy Consumption (kbTU)'], 2))
+
+def average_total_building_person():
+    data = annual_person.filter(regex='Total Energy')
+    data = data.filter(regex='Mean ', axis=0)
+    for col in data.columns:
+        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
+    fig = px.pie(values=data.iloc[0], names=data.columns)
+    st.subheader('Percentages of Average Total Energy Consumption per Person by Building in kBTU')
+    st.plotly_chart(fig)
+
+def overall_change_month():
+    data = monthly_basic.filter(regex='Total Energy')
+    for col in data.columns:
+        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
+    st.subheader('Total Energy Consumption by Building for Each Month YTD (2022) in kBTU')
+    st.line_chart(data=data)
+
+def overall_change_month_person():
+    data = monthly_person.filter(regex='Total Energy')
+    for col in data.columns:
+        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
+    st.subheader('Total Energy Consumption per Person by Building for Each Month YTD (2022) in kBTU')
+    st.line_chart(data=data)
 
 overall_change_year()
 overall_change_year_type()
@@ -69,3 +116,10 @@ total_average_energy()
 average_total_building()
 average_total_type()
 
+overall_change_year_person()
+overall_change_year_type_person()
+total_average_energy_person()
+average_total_building_person()
+
+overall_change_month()
+overall_change_month_person()
