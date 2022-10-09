@@ -12,7 +12,7 @@ st.write("# Welcome to OSU Campus Energy Dashboard! 💃")
 
 st.sidebar.success("Select a dashboard above.")
 
-df = pd.read_csv('data/Annual Means per Person.csv', index_col = 'StatType')
+df = pd.read_csv('data/Annual Means per Person.csv', index_col='StatType')
 
 # mean_rows = df.filter(regex="^Mean", axis=0)  # select rows
 # mean_gas = mean_rows.filter(regex='Natural Gas Consumption', axis=1)  # select columns
@@ -35,25 +35,35 @@ df = pd.read_csv('data/Annual Means per Person.csv', index_col = 'StatType')
 # plot = cDF.plot.pie(y='Percents', figsize=(3,3), radius = 0.9)
 # st.pyplot(plot.figure)
 
-annual_data = pd.read_csv('data/Non-Dorm Annual Basic Stats.csv', index_col='Stat Type')
+annual_data = pd.read_csv(
+    'data/Non-Dorm Annual Basic Stats.csv', index_col='Stat Type')
 
 #TODO need to include non-dorm and dorm data together!
+
+
 def overall_change_year():
     data = annual_data.filter(regex='Total Energy')
     data = data.drop(data.index[0])
     for col in data.columns:
-        data.rename(columns={col:col.replace(" - Total Energy Consumption (Cleaned) (kBTU)","")},inplace=True)
-    
+        data.rename(columns={col: col.replace(
+            " - Total Energy Consumption (Cleaned) (kBTU)", "")}, inplace=True)
+
     building_names = data.columns
-    select_buildings = st.multiselect(
-        "Select Buildings to Compare",
-        building_names,
-        default= building_names[0]
-    )
+
+    all_options = st.checkbox("Select all buildings", value=True)
+
+    if all_options:
+        select_buildings = data.columns
+    else:
+        select_buildings = st.multiselect(
+            "Select Buildings to Compare",
+            building_names,
+            default = building_names[0]
+        )
 
     st.subheader('Total Energy Consumption by Building for Each Year in kBTU')
     st.bar_chart(data=data[select_buildings])
-   
+
 
 overall_change_year()
 
